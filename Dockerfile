@@ -16,10 +16,10 @@ RUN apk add gcc g++ make automake autoconf bison flex && \
     tar -zxC /usr/src -f thrift.tar.gz && \
     rm thrift.tar.gz && \
     cd /usr/src/thrift-$THRIFT_VERSION && \
-    ./configure --without-python && \
+    ./configure --without-python --without-nodejs && \
     make && \
     make install && \
     rm -rf /usr/src/thrift-$THRIFT_VERSION && \
-    apk del gcc g++ make automake autoconf bison flex
+    apk del --purge gcc g++ make automake autoconf bison flex
 
 ADD redis.conf /etc/supervisor/conf.d/redis.conf
