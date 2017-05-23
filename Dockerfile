@@ -1,14 +1,11 @@
-FROM zhujunsan/lnp:v1.5
+FROM zhujunsan/lnp:v1.6
 
 MAINTAINER San <zhujunsan@gmail.com>
 
 ENV THRIFT_VERSION 0.10.0
 
-# Install Redis
-RUN apk add --update --no-cache redis
-
-# Install Node.js
-RUN apk add --update --no-cache nodejs
+# Install Redis/Node.js/alpine-conf
+RUN apk add --update --no-cache redis nodejs alpine-conf
 
 # Install Thrift
 RUN apk add --update --no-cache gcc g++ make automake autoconf bison flex && \
