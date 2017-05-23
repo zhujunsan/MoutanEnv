@@ -1,4 +1,4 @@
-FROM zhujunsan/lnp:v1.2
+FROM zhujunsan/lnp:v1.5
 
 MAINTAINER San <zhujunsan@gmail.com>
 
@@ -22,7 +22,9 @@ RUN apk add --update --no-cache gcc g++ make automake autoconf bison flex && \
     rm -rf /usr/src/thrift-$THRIFT_VERSION && \
     apk del --purge gcc g++ make automake autoconf bison flex
 
+# Add Redis supervisor conf
 ADD redis.conf /etc/supervisor/conf.d/redis.conf
 
+# Change timezone to CST
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
