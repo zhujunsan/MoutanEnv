@@ -1,4 +1,4 @@
-FROM zhujunsan/lnp:v1.7
+FROM zhujunsan/lnp:v1.8
 
 MAINTAINER San <zhujunsan@gmail.com>
 
