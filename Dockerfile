@@ -2,22 +2,32 @@ FROM zhujunsan/lnp:v1.8
 
 MAINTAINER San <zhujunsan@gmail.com>
 
-ENV THRIFT_VERSION 0.10.0
+ENV THRIFTPHP_VERSION v0.1.0
 
 # Install Redis/Node.js/alpine-conf
 RUN apk add --update --no-cache redis nodejs alpine-conf
 
-# Install Thrift
-RUN apk add --update --no-cache gcc g++ make automake autoconf bison flex && \
-    curl -fSL http://mirror.cc.columbia.edu/pub/software/apache/thrift/$THRIFT_VERSION/thrift-$THRIFT_VERSION.tar.gz -o thrift.tar.gz && \
-    tar -zxC /usr/src -f thrift.tar.gz && \
-    rm thrift.tar.gz && \
-    cd /usr/src/thrift-$THRIFT_VERSION && \
-    ./configure --without-python --without-nodejs && \
-    make -j4 && \
-    make install && \
-    rm -rf /usr/src/thrift-$THRIFT_VERSION && \
-    apk del --purge gcc g++ make automake autoconf bison flex
+# Install ThriftPHP
+RUN buildDeps=' \
+    git \
+    g++ \
+    make \
+    cmake \
+    bison \
+    flex \
+    ' \
+    && apk add --update $buildDeps \
+    && git clone https://github.com/stdrickforce/PHP-CPP.git \
+    && cd PHP-CPP \
+    && sed -i 's/`\${PHP_CONFIG} \-\-ldflags`//g' Makefile \
+    && make && make install \
+    && cd .. && rm -r PHP-CPP \
+    && git clone https://gitlab.baixing.cn/Terence/thriftphp.git \
+    && cd thriftphp && git checkout $THRIFTPHP_VERSION && mkdir build && cd build \
+    && cmake .. && make && make install \
+    && cd ../.. && rm -r thriftphp \
+    && echo "extension=thriftphp.so" >> /usr/local/etc/php/conf.d/thriftphp.ini \
+    && apk del --purge $buildDeps
 
 # Add Redis supervisor conf
 ADD redis.conf /etc/supervisor/conf.d/redis.conf
