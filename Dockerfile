@@ -27,7 +27,8 @@ RUN buildDeps=' \
     && cmake .. && make && make install \
     && cd ../.. && rm -r thriftphp \
     && echo "extension=thriftphp.so" >> /usr/local/etc/php/conf.d/thriftphp.ini \
-    && apk del --purge $buildDeps
+    && apk del --purge $buildDeps \
+    && echo "build finished~"
 
 # Add Redis supervisor conf
 ADD redis.conf /etc/supervisor/conf.d/redis.conf
